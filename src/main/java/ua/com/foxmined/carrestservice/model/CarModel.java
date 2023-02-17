@@ -23,10 +23,6 @@ public class CarModel {
     @JoinColumn(name="maker_id", nullable=false)
     private CarMaker carMaker;
 
-    @ManyToOne
-    @JoinColumn(name="category_id", nullable=false)
-    private CarCategory carCategory;
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -34,13 +30,12 @@ public class CarModel {
         CarModel carModel = (CarModel) o;
         return Objects.equals(id, carModel.id)
                 && Objects.equals(name, carModel.name)
-                && Objects.equals(carMaker, carModel.carMaker)
-                && Objects.equals(carCategory, carModel.carCategory);
+                && Objects.equals(carMaker, carModel.carMaker);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, carMaker, carCategory);
+        return Objects.hash(id, name, carMaker);
     }
 
     @Override
@@ -49,7 +44,6 @@ public class CarModel {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", carMaker=" + carMaker +
-                ", carCategory=" + carCategory +
                 '}';
     }
 }
