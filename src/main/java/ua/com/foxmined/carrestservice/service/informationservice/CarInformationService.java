@@ -23,4 +23,6 @@ public interface CarInformationService {
 
     List<CarInformation> findByCarMakerId(Long id);
 
+    Page<CarInformation> findByCarCategoryId(Long id, Pageable pageable);
+
 }

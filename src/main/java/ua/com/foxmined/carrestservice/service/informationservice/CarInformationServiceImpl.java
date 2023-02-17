@@ -44,4 +44,10 @@ public class CarInformationServiceImpl implements CarInformationService{
     public List<CarInformation> findByCarMakerId(Long id) {
         return carInformationRepository.findByCarMakerId(id);
     }
+
+    @Override
+    public Page<CarInformation> findByCarCategoryId(Long id, Pageable pageable) {
+        return carInformationRepository.findByCarCategoryId(id, pageable);
+    }
+
 }
