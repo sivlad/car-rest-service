@@ -2,9 +2,12 @@ package ua.com.foxmined.carrestservice.service.informationservice;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ua.com.foxmined.carrestservice.dao.information.CarInformationRepository;
+import ua.com.foxmined.carrestservice.dto.CarDto;
 import ua.com.foxmined.carrestservice.model.CarInformation;
 
 import java.util.List;
@@ -50,4 +53,15 @@ public class CarInformationServiceImpl implements CarInformationService{
         return carInformationRepository.findByCarCategoryId(id, pageable);
     }
 
+    @Override
+    public Page<CarInformation> findByCarFilters(CarDto carDto) {
+
+        return carInformationRepository.findByCarFilters(carDto.getCategory(),
+                carDto.getManufacturer(),
+                carDto.getModel(),
+                carDto.getMinYear(),
+                carDto.getMaxYear(),
+                PageRequest.of(carDto.getPage(),carDto.getPageSize(),
+                        Sort.by("year")));
+    }
 }

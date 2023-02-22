@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ua.com.foxmined.carrestservice.dao.model.CarModelRepository;
+import ua.com.foxmined.carrestservice.model.CarMaker;
 import ua.com.foxmined.carrestservice.model.CarModel;
 
 import java.util.List;
@@ -33,6 +34,11 @@ public class CarModelServiceImpl implements CarModelService{
     @Override
     public List<CarModel> findByName(String name) {
         return carModelRepository.findByNameLike(name);
+    }
+
+    @Override
+    public List<CarModel> findByNameAndCarMakerLike(String name, Long carMakerId) {
+        return carModelRepository.findByNameAndCarMakerLike(name,carMakerId);
     }
 
     @Override

@@ -2,9 +2,9 @@ package ua.com.foxmined.carrestservice.utils;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ua.com.foxmined.carrestservice.exception.FileException;
 import ua.com.foxmined.carrestservice.model.*;
@@ -28,6 +28,9 @@ import java.util.stream.Stream;
 @Log4j2
 @Service
 public class CarDBInitializer {
+
+    @Value("${data.carsource}")
+    private String carsource;
 
     @Autowired
     private CarCategoryService carCategoryService;
@@ -60,10 +63,9 @@ public class CarDBInitializer {
             return;
         }
 
-        String dbInformationFileName = PropertyFactory.getInstance().getProperty().getProperty("data.carsource");
         int firstRow = 0;
 
-        try (Stream<String> lineStream = Files.lines(Paths.get(dbInformationFileName))) {
+        try (Stream<String> lineStream = Files.lines(Paths.get(carsource))) {
             for (var currentString : lineStream.collect(Collectors.toList())) {
 
                 if (firstRow==0) {
@@ -78,7 +80,6 @@ public class CarDBInitializer {
 
                 CarMaker findCarMaker = resiveMaker(fragments[1]);
 
-//                CarCategory findCategory = resiveCategory();
                 CarModel findModel;
 
                 Optional<CarModel> optionalFindModel = resiveModel(fragments[3]);
@@ -124,7 +125,6 @@ public class CarDBInitializer {
         } catch (ParseException e) {
             log.error("Invalid Date format");
         }
-
     }
 
     private void SaveCategoriesToModel(CarModel carModel, List<CarCategory> categories) {

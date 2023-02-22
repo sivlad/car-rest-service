@@ -1,21 +1,15 @@
 package ua.com.foxmined.carrestservice.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import ua.com.foxmined.carrestservice.model.CarCategory;
+import ua.com.foxmined.carrestservice.dto.CarDto;
 import ua.com.foxmined.carrestservice.model.CarInformation;
-import ua.com.foxmined.carrestservice.model.CarMaker;
-import ua.com.foxmined.carrestservice.service.categoryservice.CarCategoryService;
 import ua.com.foxmined.carrestservice.service.informationservice.CarInformationService;
 import ua.com.foxmined.carrestservice.service.makerservice.CarMakerService;
+import ua.com.foxmined.carrestservice.service.summaryservice.CarSummaryService;
 
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.*;
 
 @RestController
@@ -26,63 +20,58 @@ public class CarController {
     private CarInformationService carInformationService;
 
     @Autowired
-    private CarMakerService carMakerService;
+    private CarSummaryService carSummaryService;
 
     @Autowired
-    private CarCategoryService carCategoryService;
+    private CarMakerService carMakerService;
 
     @RequestMapping(value = "/cars", method = RequestMethod.GET)
-    public ResponseEntity<List<CarInformation>> getCars(
-                                        @RequestParam(value = "manufacturer", required = false) String manufacturerName,
-                                        @RequestParam(value = "minYear", required = false) Integer minYear,
-                                        @RequestParam(value = "maxYear", required = false) Integer maxYear,
-                                        @RequestParam(value = "category", required = false) String category,
-                                        @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
-                                        @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize) {
+    public ResponseEntity<List<CarInformation>> getCars(CarDto sourceCarFilter) {
+        List<CarInformation> carInformationResult = carInformationService.findByCarFilters(sourceCarFilter).toList();
+        return new ResponseEntity<>(carInformationResult, HttpStatus.OK);
+    }
 
-        if (manufacturerName == null && minYear == null && maxYear == null && category != null) {
+    @RequestMapping(value = "/manufacturers/{manufacturer}", method = RequestMethod.POST)
+    public ResponseEntity<?> addManufacturer(@PathVariable(name = "manufacturer") String manufacturer) {
 
-            List<CarCategory> categories = carCategoryService.findByName(category);
+        int resultStatus = carMakerService.addManufacturer(manufacturer);
 
-            Optional<CarCategory> findCarCategory = Optional.ofNullable(categories.get(0));
-
-            if (findCarCategory.isPresent()) {
-                List<CarInformation> carInformationResult =
-                        carInformationService.findByCarCategoryId(findCarCategory.get().getId(), PageRequest.of(page,pageSize, Sort.by("year"))).toList();
-                return new ResponseEntity<>(carInformationResult, HttpStatus.OK);
-            }
-        }
-
-        List<CarMaker> carMakers = carMakerService.findByName(manufacturerName);
-
-        if (carMakers.size() == 0) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-        Optional<CarMaker> findCarMaker = Optional.ofNullable(carMakers.get(0));
-
-        List<CarInformation> carInformationResult = new ArrayList<>();
-        if (findCarMaker.isPresent()) {
-            carInformationResult = carInformationService.findByCarMakerId(findCarMaker.get().getId());
-        }
-
-        List<CarInformation> carInformationResultMinYear = new ArrayList<>();
-
-        if (minYear!=null) {
-
-            SimpleDateFormat format = new SimpleDateFormat("yyyy");
-            for (var currentCarInformation : carInformationResult) {
-                int year = Integer.parseInt(format.format(currentCarInformation.getDateOfManifacture()));
-                if (year > minYear) {
-                    carInformationResultMinYear.add(currentCarInformation);
-                }
-            }
-            return new ResponseEntity<>(carInformationResultMinYear, HttpStatus.OK);
+        if (resultStatus == 0) {
+            return new ResponseEntity<>(HttpStatus.OK);
         }
         else {
-            return new ResponseEntity<>(carInformationResult, HttpStatus.OK);
+            return new ResponseEntity<>("The manufacturer is present", HttpStatus.BAD_REQUEST);
         }
+    }
 
+    @RequestMapping(value = "/manufacturers/{manufacturer}", method = RequestMethod.DELETE)
+    public ResponseEntity<?> deleteManufacturer(@PathVariable(name = "manufacturer") String manufacturer) {
+
+        int resultStatus = carMakerService.addManufacturer(manufacturer);
+
+        if (resultStatus == 0) {
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        else {
+            return new ResponseEntity<>("The manufacturer is present", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @RequestMapping(value = "/manufacturers/{manufacturer}/models/{model}", method = RequestMethod.POST)
+    public ResponseEntity<?> addManufacturer(@PathVariable(name = "manufacturer") String manufacturer,
+                                             @PathVariable(name = "model") String model) {
+
+        int resultStatus = carSummaryService.AddManufacturerAndModel(manufacturer,model);
+
+        if (resultStatus == 0) {
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        else if (resultStatus == 1) {
+            return new ResponseEntity<>("The model is present", HttpStatus.BAD_REQUEST);
+        }
+        else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
 }

@@ -22,4 +22,6 @@ public interface CarMakerService {
 
     void deleteAll() ;
 
+    int addManufacturer(String manufacturer);
+
 }
