@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import ua.com.foxmined.carrestservice.dao.maker.CarMakerRepository;
+import ua.com.foxmined.carrestservice.exception.EntityPresentException;
 import ua.com.foxmined.carrestservice.model.CarMaker;
 
 import java.util.List;
@@ -19,8 +20,8 @@ public class CarMakerServiceImpl implements CarMakerService{
     private CarMakerRepository carMakerRepository;
 
     @Override
-    public void save(CarMaker carMaker) {
-        carMakerRepository.save(carMaker);
+    public CarMaker save(CarMaker carMaker) {
+        return carMakerRepository.save(carMaker);
     }
 
     @Override
@@ -49,27 +50,51 @@ public class CarMakerServiceImpl implements CarMakerService{
     }
 
     @Override
-    public int addManufacturer(String manufacturer) {
+    public CarMaker addManufacturer(String manufacturer) {
 
         List<CarMaker> carMakers = findByName(manufacturer);
 
         if (carMakers.size() == 0) {
             CarMaker addCarMaker = new CarMaker();
             addCarMaker.setName(manufacturer);
-            save(addCarMaker);
-            return 0;
+            return save(addCarMaker);
         }
 
         Optional<CarMaker> findCarMaker = Optional.ofNullable(carMakers.get(0));
 
         if (findCarMaker.isPresent()) {
-            return -1;
+            return findCarMaker.get();
         }
         else {
             CarMaker addCarMaker = new CarMaker();
             addCarMaker.setName(manufacturer);
             save(addCarMaker);
-            return 0;
+            return save(addCarMaker);
+        }
+    }
+
+    @Override
+    public void deleteManufacturer(String manufacturer) {
+
+        List<CarMaker> carMakers = findByName(manufacturer);
+
+        Optional<CarMaker> findCarMaker = Optional.ofNullable(carMakers.get(0));
+
+        if (findCarMaker.isPresent()) {
+            carMakerRepository.delete(findCarMaker.get());
+        }
+    }
+
+    @Override
+    public void updateManufacturer(String oldManufacturer, String newManufacturer) {
+
+        List<CarMaker> carMakers = carMakerRepository.findByNameLike(oldManufacturer);
+        Optional<CarMaker> findCarMaker = Optional.ofNullable(carMakers.get(0));
+
+        if (findCarMaker.isPresent()) {
+            CarMaker updateCarMaker = findCarMaker.get();
+            updateCarMaker.setName(newManufacturer);
+            carMakerRepository.save(updateCarMaker);
         }
     }
 

@@ -11,7 +11,7 @@ import java.util.List;
 @Service
 public interface CarModelService {
 
-    void save(CarModel carModel) ;
+    CarModel save(CarModel carModel) ;
 
     void update(CarModel carModel) ;
 

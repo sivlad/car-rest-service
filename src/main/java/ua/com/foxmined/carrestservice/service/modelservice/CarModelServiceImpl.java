@@ -17,8 +17,8 @@ public class CarModelServiceImpl implements CarModelService{
     private CarModelRepository carModelRepository;
 
     @Override
-    public void save(CarModel carModel) {
-        carModelRepository.save(carModel);
+    public CarModel save(CarModel carModel) {
+        return carModelRepository.save(carModel);
     }
 
     @Override

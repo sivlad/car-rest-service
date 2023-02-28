@@ -10,7 +10,7 @@ import java.util.List;
 @Service
 public interface CarCategoryService {
 
-    void save(CarCategory carCategory) ;
+    CarCategory save(CarCategory carCategory) ;
 
     void update(CarCategory carCategory) ;
 

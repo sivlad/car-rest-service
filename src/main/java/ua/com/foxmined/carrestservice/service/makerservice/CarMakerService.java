@@ -3,6 +3,7 @@ package ua.com.foxmined.carrestservice.service.makerservice;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import ua.com.foxmined.carrestservice.exception.EntityPresentException;
 import ua.com.foxmined.carrestservice.model.CarMaker;
 
 import java.util.List;
@@ -10,7 +11,7 @@ import java.util.List;
 @Service
 public interface CarMakerService {
 
-    void save(CarMaker carMaker) ;
+    CarMaker save(CarMaker carMaker) ;
 
     void update(CarMaker carMaker) ;
 
@@ -22,6 +23,10 @@ public interface CarMakerService {
 
     void deleteAll() ;
 
-    int addManufacturer(String manufacturer);
+    CarMaker addManufacturer(String manufacturer);
+
+    void deleteManufacturer(String manufacturer);
+
+    void updateManufacturer(String oldManufacturer,String newManufacturer);
 
 }

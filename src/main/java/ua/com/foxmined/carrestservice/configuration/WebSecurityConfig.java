@@ -10,6 +10,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import ua.com.foxmined.carrestservice.service.userdetailsservice.UserDetailsServiceImpl;
+import ua.com.foxmined.carrestservice.utils.EndPoints;
+
+import java.util.List;
 
 
 @Configuration
@@ -39,9 +42,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.csrf().disable();
 
-        http.authorizeRequests().mvcMatchers("/api/v1/cars").permitAll();
+        List<String> endPoints = EndPoints.getEndpointForAllUsers();
 
-        http.authorizeRequests().mvcMatchers("/api/v1/cars1").permitAll();
+        for (var currentEndpoints : endPoints) {
+            http.authorizeRequests().mvcMatchers(currentEndpoints).permitAll();
+        }
+
+ //       http.authorizeRequests().mvcMatchers("/api/v1/cars").permitAll();
+
+ //       http.authorizeRequests().mvcMatchers("/api/v1/cars1").permitAll();
 
  /*       http.authorizeRequests().mvcMatchers("/", "/login", "/logout").permitAll();
 

@@ -16,8 +16,7 @@ public class MyBasicAuthenticationEntryPoint extends BasicAuthenticationEntryPoi
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authEx) throws IOException {
         response.addHeader("WWW-Authenticate", "Basic realm=\"" + getRealmName() + "\"");
-        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        response.sendError(1, "Not authorized");
+        response.sendError( HttpServletResponse.SC_UNAUTHORIZED, "Not authorized");
     }
 
     @Override

@@ -1,6 +1,7 @@
 package ua.com.foxmined.carrestservice.utils;
 
 import lombok.extern.log4j.Log4j2;
+import org.springframework.stereotype.Service;
 import ua.com.foxmined.carrestservice.exception.FileException;
 
 import java.io.IOException;
@@ -11,19 +12,13 @@ import java.util.Properties;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+@Service
 @Log4j2
 public class TxtFileReader {
 
-    private final String filename;
+    public List<String> readFile(String filename) throws FileException {
 
-    public TxtFileReader(String filename) {
-        this.filename = filename;
-    }
-
-    public List<String> readFile() throws FileException {
-        Properties property =  PropertyFactory.getInstance().getProperty();
-
-        try (Stream<String> lineStream = Files.lines(Paths.get(property.getProperty(filename)))) {
+        try (Stream<String> lineStream = Files.lines(Paths.get(filename))) {
             return lineStream.collect(Collectors.toList());
         } catch (IOException exception) {
             log.error("Error open file" + exception.getMessage());

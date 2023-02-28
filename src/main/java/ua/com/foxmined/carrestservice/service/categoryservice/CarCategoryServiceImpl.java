@@ -17,8 +17,8 @@ public class CarCategoryServiceImpl implements CarCategoryService{
     private CarCategoryRepository carCategoryRepository;
 
     @Override
-    public void save(CarCategory carCategory) {
-        carCategoryRepository.save(carCategory);
+    public CarCategory save(CarCategory carCategory) {
+        return carCategoryRepository.save(carCategory);
     }
 
     @Override

@@ -2,6 +2,7 @@ package ua.com.foxmined.carrestservice.service.summaryservice;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ua.com.foxmined.carrestservice.exception.EntityPresentException;
 import ua.com.foxmined.carrestservice.model.CarMaker;
 import ua.com.foxmined.carrestservice.model.CarModel;
 import ua.com.foxmined.carrestservice.service.makerservice.CarMakerService;
@@ -20,30 +21,61 @@ public class CarSummaryServiceImpl implements CarSummaryService{
     private CarModelService carModelService;
 
     @Override
-    public int AddManufacturerAndModel(String manufacturer, String model) {
+    public CarModel addManufacturerAndModel(String manufacturer, String model) {
 
-        carMakerService.addManufacturer(manufacturer);
+        CarMaker carMaker = carMakerService.addManufacturer(manufacturer);
+        List<CarModel> findCarModels = carModelService.findByNameAndCarMakerLike(model,carMaker.getId());
 
-        List<CarMaker> findCarMakers = carMakerService.findByName(manufacturer);
-
-        Optional<CarMaker> carMaker = Optional.ofNullable(findCarMakers.get(0));
-
-        if (carMaker.isEmpty()) {
-            return -1;
-        }
-
-        List<CarModel> findCarModels = carModelService.findByNameAndCarMakerLike(model,carMaker.get().getId());
-
-        CarModel addCarmodel = new CarModel();
-        addCarmodel.setCarMaker(carMaker.get());
-        addCarmodel.setName(model);
+        CarModel addCarModel = new CarModel();
+        addCarModel.setCarMaker(carMaker);
+        addCarModel.setName(model);
 
         if (findCarModels.size() == 0) {
-            carModelService.save(addCarmodel);
-            return 0;
+            return carModelService.save(addCarModel);
+        }
+
+        Optional<CarModel> findCarModel = Optional.ofNullable(findCarModels.get(0));
+        if (findCarModel.isEmpty()) {
+            carModelService.save(addCarModel);
+            return carModelService.save(addCarModel);
         }
         else {
-            return 1;
+            return findCarModel.get();
+        }
+    }
+
+    @Override
+    public void deleteManufacturerAndModel(String manufacturer, String model) {
+        CarMaker carMaker = carMakerService.addManufacturer(manufacturer);
+        List<CarModel> findCarModels = carModelService.findByNameAndCarMakerLike(model,carMaker.getId());
+
+        Optional<CarModel> findCarModel = Optional.ofNullable(findCarModels.get(0));
+        if (findCarModel.isPresent()) {
+            carModelService.delete(findCarModel.get());
+        }
+
+    }
+
+    @Override
+    public void updateModelCurrentManufacturer(String manufacturer, String oldModel, String newModel) {
+        List<CarMaker> carMakers = carMakerService.findByName(manufacturer);
+
+        if (carMakers.size() == 0) {
+            return;
+        }
+
+        Optional<CarMaker> findCarMaker = Optional.ofNullable(carMakers.get(0));
+        if (findCarMaker.isEmpty()) {
+            return;
+        }
+        CarMaker carMaker = findCarMaker.get();
+        List<CarModel> findCarModels = carModelService.findByNameAndCarMakerLike(oldModel,carMaker.getId());
+
+        Optional<CarModel> findCarModel = Optional.ofNullable(findCarModels.get(0));
+        if (findCarModel.isPresent()) {
+            CarModel updateCarModel = findCarModel.get();
+            updateCarModel.setName(newModel);
+            carModelService.save(updateCarModel);
         }
     }
 
