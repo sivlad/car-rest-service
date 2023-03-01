@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ua.com.foxmined.carrestservice.model.CarCategory;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Repository
@@ -18,4 +19,5 @@ public interface CarCategoryRepository extends PagingAndSortingRepository<CarCat
 
     List<CarCategory> findByNameLike(String name);
 
+    Optional<CarCategory> findByName(String name);
 }

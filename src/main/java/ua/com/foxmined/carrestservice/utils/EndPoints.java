@@ -14,6 +14,8 @@ public class EndPoints {
     static public final String SET_MANUFACTURER_AND_MODEL = "/manufacturers/{manufacturer}/models/{model}";
     static public final String UPDATE_MANUFACTURER = "/manufacturers/{oldManufacturer}/{newManufacturer}";
     static public final String UPDATE_MODEL = "/manufacturers/{manufacturer}/models/{oldModel}/{newModel}";
+    static public final String SET_CATEGORY = "/categories/{category}";
+    static public final String UPDATE_CATEGORY = "/categories/{oldCategory}/{newCategory}";
 
 
     static public List<String> getEndpointForAllUsers() {

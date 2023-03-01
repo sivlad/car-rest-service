@@ -49,23 +49,12 @@ public class CarDBInitializer {
     @Autowired
     private CarSummaryService carSummaryService;
 
-    public void deleteAllRowsInDB() {
-        carCategoryService.deleteAll();
-        carInformationService.deleteAll();
-        carMakerService.deleteAll();
-        carModelService.deleteAll();
-        log.debug("All rows in DB was deleted");
-    }
-
     public void createRowsInDb() {
 
         Page<CarInformation> testCarInformation = carInformationService.findAll(PageRequest.of(0, 10));
         if (testCarInformation.toList().size() != 0) {
             log.info("DB initialize complete");
             return;
-        }
-        else {
-            deleteAllRowsInDB();
         }
 
         List<String> carRows = new ArrayList<>();

@@ -18,7 +18,6 @@ public class AppStarter {
     public ApplicationRunner init() {
         log.info("ApplicationRunner has started");
         return args -> {
-//            carDBInitializer.deleteAllRowsInDB();
             carDBInitializer.createRowsInDb();
         };
     }

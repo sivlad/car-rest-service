@@ -3,6 +3,7 @@ package ua.com.foxmined.carrestservice.service.categoryservice;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import ua.com.foxmined.carrestservice.exception.EntityNotPresentException;
 import ua.com.foxmined.carrestservice.model.CarCategory;
 
 import java.util.List;
@@ -21,5 +22,11 @@ public interface CarCategoryService {
     Page<CarCategory> findAll(Pageable pageable) ;
 
     void deleteAll() ;
+
+    CarCategory addCategory(String category);
+
+    CarCategory updateCategory(String oldCategory, String newCategory) throws EntityNotPresentException;
+
+    void deleteCategory(String category) throws EntityNotPresentException;
 
 }
