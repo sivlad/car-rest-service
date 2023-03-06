@@ -4,24 +4,21 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.Date;
 import java.util.Objects;
 
 @Entity
 @Getter
 @Setter
-@Table(name = "information")
-public class CarInformation {
+@Table(name = "modelcategory")
+public class CarModelCategory {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name="objectid")
-    private String objectId;
-
-    @Column(name="year")
-    private Date dateOfManifacture;
+    @ManyToOne
+    @JoinColumn(name="category_id", nullable=false)
+    private CarCategory carCategory;
 
     @ManyToOne
     @JoinColumn(name="model_id", nullable=false)
@@ -31,24 +28,22 @@ public class CarInformation {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        CarInformation that = (CarInformation) o;
+        CarModelCategory that = (CarModelCategory) o;
         return Objects.equals(id, that.id)
-                && Objects.equals(objectId, that.objectId)
-                && Objects.equals(dateOfManifacture, that.dateOfManifacture)
+                && Objects.equals(carCategory, that.carCategory)
                 && Objects.equals(carModel, that.carModel);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, objectId, dateOfManifacture, carModel);
+        return Objects.hash(id, carCategory, carModel);
     }
 
     @Override
     public String toString() {
-        return "CarInformation{" +
+        return "CarModelCategory{" +
                 "id=" + id +
-                ", objectId='" + objectId + '\'' +
-                ", dateOfManifacture=" + dateOfManifacture +
+                ", carCategory=" + carCategory +
                 ", carModel=" + carModel +
                 '}';
     }
