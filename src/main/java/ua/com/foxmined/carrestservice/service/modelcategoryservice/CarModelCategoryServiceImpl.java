@@ -1,6 +1,8 @@
 package ua.com.foxmined.carrestservice.service.modelcategoryservice;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ua.com.foxmined.carrestservice.dao.modelcategory.CarModelCategoryRepository;
 import ua.com.foxmined.carrestservice.model.CarModelCategory;
@@ -14,8 +16,8 @@ public class CarModelCategoryServiceImpl implements CarModelCategoryService {
     private CarModelCategoryRepository carModelCategoryRepository;
 
     @Override
-    public void save(CarModelCategory carModelCategory) {
-        carModelCategoryRepository.save(carModelCategory);
+    public CarModelCategory save(CarModelCategory carModelCategory) {
+        return carModelCategoryRepository.save(carModelCategory);
     }
 
     @Override
@@ -29,8 +31,8 @@ public class CarModelCategoryServiceImpl implements CarModelCategoryService {
     }
 
     @Override
-    public List<CarModelCategory> findAll() {
-        return carModelCategoryRepository.findAll();
+    public Page<CarModelCategory> findAll(Pageable pageable) {
+        return carModelCategoryRepository.findAll(pageable);
     }
 
     @Override

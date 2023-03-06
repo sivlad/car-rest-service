@@ -19,8 +19,8 @@ public class CarInformationServiceImpl implements CarInformationService{
     private CarInformationRepository carInformationRepository;
 
     @Override
-    public void save(CarInformation carInformation) {
-        carInformationRepository.save(carInformation);
+    public CarInformation save(CarInformation carInformation) {
+        return carInformationRepository.save(carInformation);
     }
 
     @Override

@@ -10,9 +10,7 @@ import ua.com.foxmined.carrestservice.exception.FileException;
 import ua.com.foxmined.carrestservice.model.*;
 import ua.com.foxmined.carrestservice.service.categoryservice.CarCategoryService;
 import ua.com.foxmined.carrestservice.service.informationservice.CarInformationService;
-import ua.com.foxmined.carrestservice.service.makerservice.CarMakerService;
 import ua.com.foxmined.carrestservice.service.modelcategoryservice.CarModelCategoryService;
-import ua.com.foxmined.carrestservice.service.modelservice.CarModelService;
 import ua.com.foxmined.carrestservice.service.summaryservice.CarSummaryService;
 
 import java.text.ParseException;
@@ -35,12 +33,6 @@ public class CarDBInitializer {
     private CarInformationService carInformationService;
 
     @Autowired
-    private CarMakerService carMakerService;
-
-    @Autowired
-    private CarModelService carModelService;
-
-    @Autowired
     private CarModelCategoryService carModelCategoryService;
 
     @Autowired
@@ -51,52 +43,60 @@ public class CarDBInitializer {
 
     public void createRowsInDb() {
 
-        Page<CarInformation> testCarInformation = carInformationService.findAll(PageRequest.of(0, 10));
-        if (testCarInformation.toList().size() != 0) {
+        if (testRowsInDB()) {
             log.info("DB initialize complete");
             return;
         }
 
-        List<String> carRows = new ArrayList<>();
-        try {
-            carRows = txtFileReader.readFile(carsource);
-        } catch (FileException e) {
-            log.error("Error open file");
-        }
-        if (carRows.size() != 0) {
-            carRows.remove(0);
-        }
-
+        List<String> carRows = getListOfFilesEntries();
         for (var currentString : carRows) {
-
             String fragments[] = currentString.split(",");
             if (fragments.length < 5) {
                 continue;
             }
             CarModel addCarModel = carSummaryService.addManufacturerAndModel(fragments[1],fragments[3]);
-            List<CarCategory> addCategories;
-
-            if (fragments.length == 5) {
-                addCategories = createListCategory(fragments[4]);
-            } else {
-                String fragmentsCategory[] = currentString.split("\"");
-                String categoryString = fragmentsCategory[1];
-                addCategories = createListCategory(categoryString);
-            }
-
+            List<CarCategory> addCategories = getListOfCategories(currentString);
             saveCategoriesToModel(addCarModel, addCategories);
-            CarInformation addCarInformation = new CarInformation();
-            addCarInformation.setCarModel(addCarModel);
-            try {
-                addCarInformation.setDateOfManifacture(new SimpleDateFormat("yyyy").parse(fragments[2]));
-            } catch (ParseException e) {
-                log.debug("invalid Date format");
-                e.printStackTrace();
-            }
-            addCarInformation.setObjectId(fragments[0]);
-            carInformationService.save(addCarInformation);
+            saveCarInformation(addCarModel,fragments[2],fragments[0]);
         }
         log.info("DB initialize complete");
+    }
+
+    private boolean testRowsInDB() {
+        Page<CarInformation> testCarInformation = carInformationService.findAll(PageRequest.of(0, 10));
+        if (testCarInformation.toList().size() != 0) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    private List<CarCategory> getListOfCategories(String currentFileEntry) {
+        String fragments[] = currentFileEntry.split(",");
+        List<CarCategory> addCategories;
+
+        if (fragments.length == 5) {
+            addCategories = createListCategory(fragments[4]);
+        } else {
+            String fragmentsCategory[] = currentFileEntry.split("\"");
+            String categoryString = fragmentsCategory[1];
+            addCategories = createListCategory(categoryString);
+        }
+
+        return addCategories;
+    }
+
+    private void saveCarInformation(CarModel addCarModel, String year, String objectId) {
+        CarInformation addCarInformation = new CarInformation();
+        addCarInformation.setCarModel(addCarModel);
+        try {
+            addCarInformation.setDateOfManifacture(new SimpleDateFormat("yyyy").parse(year));
+        } catch (ParseException e) {
+            log.debug("invalid Date format");
+        }
+        addCarInformation.setObjectId(objectId);
+        carInformationService.save(addCarInformation);
     }
 
     private void saveCategoriesToModel(CarModel carModel, List<CarCategory> categories) {
@@ -106,6 +106,20 @@ public class CarDBInitializer {
             addCategoryToModel.setCarCategory(currentCategory);
             carModelCategoryService.save(addCategoryToModel);
         }
+    }
+
+    private List<String> getListOfFilesEntries() {
+        List<String> carRows = new ArrayList<>();
+        try {
+            carRows = txtFileReader.readFile(carsource);
+        } catch (FileException e) {
+            log.error("Error open file");
+            return carRows;
+        }
+        if (carRows.size() != 0) {
+            carRows.remove(0);
+        }
+        return carRows;
     }
 
     private List<CarCategory> createListCategory(String categories) {

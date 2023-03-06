@@ -9,6 +9,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import ua.com.foxmined.carrestservice.dao.user.UserRepository;
+import ua.com.foxmined.carrestservice.dao.userrole.UserRoleRepository;
+import ua.com.foxmined.carrestservice.model.AppUser;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
@@ -20,13 +23,13 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-//    private final UserRepository userRepository;
-//    private final UserRoleRepository userRoleRepository;
+    private final UserRepository userRepository;
+    private final UserRoleRepository userRoleRepository;
 
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
-/*        AppUser appUser = this.userRepository.findUserAccount(userName)
+        AppUser appUser = this.userRepository.findUserAccount(userName)
             .orElseThrow(RuntimeException::new);
 
         if (appUser == null) {
@@ -48,9 +51,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         }
 
         return new User(appUser.getUserName(), appUser.getEncrytedPassword(), grantList);
-
- */
-        return null;
     }
 
 }

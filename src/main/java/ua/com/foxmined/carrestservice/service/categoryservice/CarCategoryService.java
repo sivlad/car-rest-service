@@ -5,23 +5,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ua.com.foxmined.carrestservice.exception.EntityNotPresentException;
 import ua.com.foxmined.carrestservice.model.CarCategory;
+import ua.com.foxmined.carrestservice.service.DAOInterface;
 
 import java.util.List;
 
 @Service
-public interface CarCategoryService {
-
-    CarCategory save(CarCategory carCategory) ;
-
-    void update(CarCategory carCategory) ;
-
-    void delete(CarCategory carCategory) ;
+public interface CarCategoryService extends DAOInterface<CarCategory> {
 
     List<CarCategory> findByName(String name);
-
-    Page<CarCategory> findAll(Pageable pageable) ;
-
-    void deleteAll() ;
 
     CarCategory addCategory(String category);
 

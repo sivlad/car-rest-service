@@ -48,43 +48,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             http.authorizeRequests().mvcMatchers(currentEndpoints).permitAll();
         }
 
- //       http.authorizeRequests().mvcMatchers("/api/v1/cars").permitAll();
+        List<String> endPointsForAuthorizedUsers = EndPoints.getEndpointForAuthorizedUsers();
 
- //       http.authorizeRequests().mvcMatchers("/api/v1/cars1").permitAll();
-
- /*       http.authorizeRequests().mvcMatchers("/", "/login", "/logout").permitAll();
-
-        http.authorizeRequests().mvcMatchers("/userInfo")
-                .access("hasAnyRole('ROLE_USER', 'ROLE_ADMIN', 'ROLE_STUDENT', 'ROLE_TEACHER'," +
-                        "        'ROLE_STUFF','ROLE_DEFAULT')");
-
-        http.authorizeRequests().mvcMatchers("/userInfo", "/studentsInGroup", "/studentsGroups/choiceGroup")
-                .access("hasAnyRole('ROLE_USER', 'ROLE_ADMIN', 'ROLE_STUDENT', 'ROLE_TEACHER', 'ROLE_STUFF')");
-
-        List<Endpoints> endpoints = Endpoints.getEndpointForAdminStuff();
-
-        for (var endpoint : endpoints) {
-            http.authorizeRequests().mvcMatchers(endpoint.getEndpoint())
-                    .access("hasAnyRole('ROLE_ADMIN', 'ROLE_STUFF')");
+        for (var currentEndpoints : endPointsForAuthorizedUsers) {
+            http.authorizeRequests().mvcMatchers(currentEndpoints).access("hasAnyRole('ROLE_USER')");
         }
 
-        http.authorizeRequests().mvcMatchers("/students/get", "/groups/get").access("hasAnyRole('ROLE_STUDENT', 'ROLE_ADMIN', 'ROLE_STUFF')");
-        http.authorizeRequests().mvcMatchers("/teachers/get").access("hasAnyRole('ROLE_TEACHER', 'ROLE_ADMIN', 'ROLE_STUFF')");
-        http.authorizeRequests().mvcMatchers("/subjects/get").access("hasAnyRole('ROLE_TEACHER', 'ROLE_ADMIN', 'ROLE_STUDENT', 'ROLE_STUFF')");
-        http.authorizeRequests().mvcMatchers("/teachersSubjects", "/teacherSubjects/choiceTeacher").access("hasAnyRole('ROLE_TEACHER')");
-
-        http.authorizeRequests().mvcMatchers("/briefsubjects").access("hasAnyRole('ROLE_DEFAULT')");
-
-        http.authorizeRequests().and().exceptionHandling().authenticationEntryPoint(authenticationEntryPoint);
-*/
-        http.authorizeRequests().and().formLogin()
-            .loginProcessingUrl("/j_spring_security_check")
-            .loginPage("/login")
-            .defaultSuccessUrl("/userInfo")
-            .failureUrl("/login?error=true")
-            .usernameParameter("username")
-            .passwordParameter("password").and()
-            .logout().logoutUrl("/logout").logoutSuccessUrl("/logoutSuccessful");
+        http.authorizeRequests()
+                .anyRequest().authenticated()
+                .and()
+                .formLogin()
+                .and()
+                .httpBasic();
     }
 
 }
