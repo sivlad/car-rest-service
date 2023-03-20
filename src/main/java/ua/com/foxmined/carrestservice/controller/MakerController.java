@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ua.com.foxmined.carrestservice.model.CarMaker;
 import ua.com.foxmined.carrestservice.service.makerservice.CarMakerService;
@@ -26,12 +27,14 @@ public class MakerController {
     }
 
     @RequestMapping(value = EndPoints.SET_MANUFACTURER, method = RequestMethod.POST)
+    @PreAuthorize("hasAuthority('create:items')")
     public ResponseEntity<?> addManufacturer(@PathVariable(name = "manufacturer") String manufacturer) {
         carMakerService.addManufacturer(manufacturer);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @RequestMapping(value = EndPoints.UPDATE_MANUFACTURER, method = RequestMethod.PUT)
+    @PreAuthorize("hasAuthority('update:items')")
     public ResponseEntity<?> updateManufacturer(@PathVariable(name = "oldManufacturer") String oldManufacturer,
                                                 @PathVariable(name = "newManufacturer") String newManufacturer) {
         carMakerService.updateManufacturer(oldManufacturer,newManufacturer);
@@ -39,6 +42,7 @@ public class MakerController {
     }
 
     @RequestMapping(value = EndPoints.SET_MANUFACTURER, method = RequestMethod.DELETE)
+    @PreAuthorize("hasAuthority('delete:items')")
     public ResponseEntity<?> deleteManufacturer(@PathVariable(name = "manufacturer") String manufacturer) {
 
         carMakerService.deleteManufacturer(manufacturer);

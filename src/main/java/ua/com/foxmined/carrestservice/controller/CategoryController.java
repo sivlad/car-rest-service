@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ua.com.foxmined.carrestservice.exception.EntityNotPresentException;
 import ua.com.foxmined.carrestservice.model.CarCategory;
@@ -27,12 +28,14 @@ public class CategoryController {
     }
 
     @RequestMapping(value = EndPoints.SET_CATEGORY, method = RequestMethod.POST)
+    @PreAuthorize("hasAuthority('create:items')")
     public ResponseEntity<?> addCategory(@PathVariable(name = "category") String category) {
         сarCategoryService.addCategory(category);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @RequestMapping(value = EndPoints.UPDATE_CATEGORY, method = RequestMethod.PUT)
+    @PreAuthorize("hasAuthority('update:items')")
     public ResponseEntity<?> updateCategory(@PathVariable(name = "oldCategory") String oldCategory,
                                          @PathVariable(name = "newCategory") String newCategory) {
         try {
@@ -45,6 +48,7 @@ public class CategoryController {
     }
 
     @RequestMapping(value = EndPoints.SET_CATEGORY, method = RequestMethod.DELETE)
+    @PreAuthorize("hasAuthority('delete:items')")
     public ResponseEntity<?> deleteCategory(@PathVariable(name = "category") String category) {
 
         try {
