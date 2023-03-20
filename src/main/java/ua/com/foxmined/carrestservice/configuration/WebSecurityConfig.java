@@ -18,7 +18,6 @@ import ua.com.foxmined.carrestservice.utils.EndPoints;
 
 import java.util.List;
 
-
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
@@ -33,11 +32,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
 
         List<String> endPoints = EndPoints.getEndpointForAllUsers();
-
         for (var currentEndpoints : endPoints) {
             http.authorizeRequests().mvcMatchers(currentEndpoints).permitAll();
         }
-
         http.authorizeRequests()
                 .anyRequest()
                 .authenticated()
@@ -51,7 +48,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .jwtAuthenticationConverter(jwtAuthenticationConverter());
     }
 
-    CorsConfigurationSource corsConfigurationSource() {
+    private CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedMethods(List.of(
                 HttpMethod.GET.name(),
@@ -65,7 +62,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return source;
     }
 
-    JwtDecoder jwtDecoder() {
+    private JwtDecoder jwtDecoder() {
         OAuth2TokenValidator<Jwt> withAudience = new AudienceValidator(audience);
         OAuth2TokenValidator<Jwt> withIssuer = JwtValidators.createDefaultWithIssuer(issuer);
         OAuth2TokenValidator<Jwt> validator = new DelegatingOAuth2TokenValidator<>(withAudience, withIssuer);
@@ -75,7 +72,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return jwtDecoder;
     }
 
-    JwtAuthenticationConverter jwtAuthenticationConverter() {
+    private JwtAuthenticationConverter jwtAuthenticationConverter() {
         JwtGrantedAuthoritiesConverter converter = new JwtGrantedAuthoritiesConverter();
         converter.setAuthoritiesClaimName("permissions");
         converter.setAuthorityPrefix("");
@@ -84,5 +81,4 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         jwtConverter.setJwtGrantedAuthoritiesConverter(converter);
         return jwtConverter;
     }
-
 }

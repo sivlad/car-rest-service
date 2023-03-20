@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import ua.com.foxmined.carrestservice.exception.EntityNotPresentException;
-import ua.com.foxmined.carrestservice.service.informationservice.CarInformationService;
 import ua.com.foxmined.carrestservice.service.summaryservice.CarSummaryService;
 import ua.com.foxmined.carrestservice.utils.EndPoints;
 

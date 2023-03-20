@@ -48,5 +48,4 @@ public class MakerController {
         carMakerService.deleteManufacturer(manufacturer);
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
 }

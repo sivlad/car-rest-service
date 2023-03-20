@@ -59,5 +59,4 @@ public class CategoryController {
             return new ResponseEntity<>("There is not current category",HttpStatus.NOT_FOUND);
         }
     }
-
 }

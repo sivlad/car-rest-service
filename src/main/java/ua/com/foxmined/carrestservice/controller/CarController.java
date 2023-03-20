@@ -4,9 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.oauth2.core.oidc.user.OidcUser;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ua.com.foxmined.carrestservice.dto.CarDto;
 import ua.com.foxmined.carrestservice.model.CarInformation;
@@ -57,6 +54,4 @@ public class CarController {
         carSummaryService.updateModelCurrentManufacturer(manufacturer,oldModel,newModel);
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
-
 }
