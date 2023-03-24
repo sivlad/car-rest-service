@@ -35,6 +35,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         for (var currentEndpoints : endPoints) {
             http.authorizeRequests().mvcMatchers(currentEndpoints).permitAll();
         }
+
+        http.authorizeRequests().mvcMatchers("/swagger-ui.html",
+                "/swagger-ui/*",
+                "/api-docs/**",
+                "/api-docs.yaml").permitAll();
+
         http.authorizeRequests()
                 .anyRequest()
                 .authenticated()

@@ -16,6 +16,7 @@
 	<properties>
 		<java.version>17</java.version>
 		<security.version>5.7.7</security.version>
+		<springdoc.version>1.6.4</springdoc.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -76,6 +77,13 @@
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-ui</artifactId>
+			<version>${springdoc.version}</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
