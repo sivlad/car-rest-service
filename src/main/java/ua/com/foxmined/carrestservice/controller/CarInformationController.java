@@ -1,5 +1,6 @@
 package ua.com.foxmined.carrestservice.controller;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,7 @@ import ua.com.foxmined.carrestservice.utils.EndPoints;
 
 @RestController
 @RequestMapping(value = EndPoints.VERSION_1)
+@SecurityRequirement(name = "bearerAuth")
 public class CarInformationController {
 
     @Autowired
